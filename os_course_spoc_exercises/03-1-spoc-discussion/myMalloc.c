@@ -1,5 +1,6 @@
 /*
  * 参考http://github.com/mit-pdos/xv6-public/blob/master/umalloc.c
+ * 最先匹配算法
  */
 
 #include <sys/types.h>
