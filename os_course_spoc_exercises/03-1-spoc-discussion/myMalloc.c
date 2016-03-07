@@ -1,3 +1,7 @@
+/*
+ * 参考http://github.com/mit-pdos/xv6-public/blob/master/umalloc.c
+ */
+
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -6,7 +10,7 @@ typedef long Align;/*for alignment to long boundary*/
 union header {
     struct {
         union header *ptr; /*next block if on free list*/
-        unsigned size; /*size of this block*/
+        unsigned int size; /*size of this block*/
     } s;
     Align x;
 };
@@ -19,7 +23,7 @@ static Header *freep = NULL;//空闲列表
 void free(void *sp);
 
 #define NALLOC 1024    /* minimum #units to request */
-static Header *morecore(unsigned nu)//每次向os额外申请的大小最少是NALLOC
+static Header *morecore(unsigned int nu)//每次向os额外申请的大小最少是NALLOC
 {
     char *cp;
     Header *up;
@@ -34,10 +38,10 @@ static Header *morecore(unsigned nu)//每次向os额外申请的大小最少是N
     return freep;//返回修改之后的空闲列表
 }
 
-void *malloc(unsigned nbytes)
+void *malloc(unsigned int nbytes)
 {
     Header *p, *prevp;
-    unsigned nunits;
+    unsigned int nunits;
     nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1;//取整
     if((prevp = freep) == NULL) { /* no free list */
         base.s.ptr = freep = prevp = &base;
@@ -83,12 +87,13 @@ void free(void *ap)//释放空间：增加freep列表的长度，合并
 }
 
 int main(){
+    printf("test begin...\n");
     void *p = malloc(256);
     void *q = malloc(64);
     if(p && q) printf("malloc right!!\n");
     else printf("malloc wrong\n");
     free(q);
     free(p);
-    printf(" test right...\n");
+    printf("test right...\n");
     return 0;
 }
