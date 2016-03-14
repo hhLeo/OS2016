@@ -1,8 +1,0 @@
-node_modules
-_book
-assets
-*.bak
-*.org
-*~
-*.dot
-autocover
