@@ -62,7 +62,7 @@ int calc(int addr){
 		int pte_con = page[pte_addr][pte_off];
 		// is valid ?
 		bool pte_is_valid = pte_con >> 7;
-		printf("    --> pte index:0x%x  pte contents:(valid %d, pfn 0x%x)\n", pte_off, pte_is_valid, pte_con & 127);
+		printf("  --> pte index:0x%x  pte contents:(valid %d, pfn 0x%x)\n", pte_off, pte_is_valid, pte_con & 127);
 		// pte index:pte_off, pte contents:(pte_con, binary: valid:pte_is_valid, pfn:pte_con&127
 		if (pte_is_valid){
 			// 去掉valid位，得到对应的数组地址
