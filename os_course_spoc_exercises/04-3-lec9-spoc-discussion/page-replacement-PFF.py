@@ -1,4 +1,7 @@
 #! /usr/bin/env python
+#输入格式参考page-replacement-option.py,置换算法是PFF(不命中率算法)
+#输入选项中option 只能输入“PFF”，否则出错
+#memory 的初始化为[1, 4, 5], 是为了和PPT符合，便于测试，memory初始化为空也正确
 
 import sys
 from optparse import OptionParser
