@@ -23,7 +23,7 @@ run_link、list_link、hash_link
 
 ---
 答：在`proc.c`文件中，可以看到`proc_init()`函数中创建了空闲进程`idleproc`和初始进程`initproc`;
-```
+```C
 		if ((idleproc = alloc_proc()) == NULL) {
 			panic("cannot alloc idleproc.\n");
 		}
@@ -37,7 +37,7 @@ run_link、list_link、hash_link
 		nr_process ++;
 ```
 `initproc`的创建也是在`proc.c`里：
-```
+```C
 		int pid = kernel_thread(init_main, "Hello world!!", 0);
 		if (pid <= 0) {
 			panic("create init_main failed.\n");
@@ -65,7 +65,7 @@ run_link、list_link、hash_link
 
 2.在`proc.c`中，`proc_init`创建了两个内核进程：`idleproc`和`initproc`
 
-```
+```C
 	idleproc = alloc_proc()
 	...
 	int pid = kernel_thread(init_main, NULL, 0);
@@ -75,13 +75,13 @@ run_link、list_link、hash_link
 
 3.在`proc.c`中，`init_main`创建了`user_main`内核进程
 
-```
+```C
 	int pid = kernel_thread(user_main, NULL, 0);
 ```
 
 4.`user_main`是用于执行一个用户程序的内核进程
 
-```
+```C
 	KERNEL_EXECVE(sh);
 ```
 
