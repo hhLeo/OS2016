@@ -20,6 +20,31 @@ run_link、list_link、hash_link
 2. 新进程创建时的进程标识是如何设置的？请指明相关代码。
 3. fork()的例子中进程标识的赋值顺序说明进程的执行顺序。
 4. 请在ucore启动时显示空闲进程（idleproc）和初始进程（initproc）的进程标识。
+```
+答：在proc.c文件中，可以看到proc_init()函数中创建了空闲进程idleproc和初始进程initproc;
+		if ((idleproc = alloc_proc()) == NULL) {
+			panic("cannot alloc idleproc.\n");
+		}
+
+		idleproc->pid = 0;//设置空闲进程的进程标识pid = 0;
+		cprintf("pid of idleproc : %d\n", idleproc->pid);//this is spoc-exercise code
+		idleproc->state = PROC_RUNNABLE;
+		idleproc->kstack = (uintptr_t)bootstack;
+		idleproc->need_resched = 1;
+		set_proc_name(idleproc, "idle");
+		nr_process ++;
+initproc的创建也是在proc.c里：
+		int pid = kernel_thread(init_main, "Hello world!!", 0);
+		if (pid <= 0) {
+			panic("create init_main failed.\n");
+		}
+
+		initproc = find_proc(pid);//initproc的进程标识即为pid
+		cprintf("pid of initproc : %d\n", pid);//this is spoc-exercise code
+		set_proc_name(initproc, "init");
+proc_init()函数中先创建了第一个进程idleproc，并设置该进程的相关状态信息，然后创建了第二个进程，该进程加载的代码是init_main()，
+然后让initproc指向第二个进程，也就得到了initproc的进程标识pid。输出即可。
+```
 5. 请在ucore启动时显示空闲线程（idleproc）和初始进程(initproc)的进程控制块中的“pde_t *pgdir”的内容。它们是否一致？为什么？
 
 ### 12.3 进程加载
