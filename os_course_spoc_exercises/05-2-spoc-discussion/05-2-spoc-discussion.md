@@ -20,8 +20,10 @@ run_link、list_link、hash_link
 2. 新进程创建时的进程标识是如何设置的？请指明相关代码。
 3. fork()的例子中进程标识的赋值顺序说明进程的执行顺序。
 4. 请在ucore启动时显示空闲进程（idleproc）和初始进程（initproc）的进程标识。
+
+---
+答：在`proc.c`文件中，可以看到`proc_init()`函数中创建了空闲进程`idleproc`和初始进程`initproc`;
 ```
-答：在proc.c文件中，可以看到proc_init()函数中创建了空闲进程idleproc和初始进程initproc;
 		if ((idleproc = alloc_proc()) == NULL) {
 			panic("cannot alloc idleproc.\n");
 		}
@@ -42,9 +44,11 @@ initproc的创建也是在proc.c里：
 		initproc = find_proc(pid);//initproc的进程标识即为pid
 		cprintf("pid of initproc : %d\n", pid);//this is spoc-exercise code
 		set_proc_name(initproc, "init");
-proc_init()函数中先创建了第一个进程idleproc，并设置该进程的相关状态信息，然后创建了第二个进程，该进程加载的代码是init_main()，
-然后让initproc指向第二个进程，也就得到了initproc的进程标识pid。输出即可。
 ```
+`proc_init()`函数中先创建了第一个进程`idleproc`，并设置该进程的相关状态信息，然后创建了第二个进程，该进程加载的代码是`init_main()`，
+然后让`initproc`指向第二个进程，也就得到了`initproc`的进程标识`pid`。输出即可。
+
+---
 5.请在ucore启动时显示空闲线程（idleproc）和初始进程(initproc)的进程控制块中的“pde_t *pgdir”的内容。它们是否一致？为什么？
 
 ### 12.3 进程加载
@@ -52,6 +56,7 @@ proc_init()函数中先创建了第一个进程idleproc，并设置该进程的�
 1. 加载进程后，新进程进入就绪状态，它开始执行时的第一条指令的位置，在elf中保存在什么地方？在加载后，保存在什么地方？
 2. 第一个用户进程执行的代码在哪里？它是什么时候加载到内存中的？
 
+---
 答：第一个用户进程执行的代码在user文件夹中，lab8中默认为sh.c文件；加载用户代码的进程代码在/kern/process/proc.c:user_main中，具体过程如下：
 
 1.在`init.c`中调用了`proc_init()`
@@ -80,6 +85,7 @@ KERNEL_EXECVE(sh);
 
 5.`kernel_execve`：执行`SYS_exec`系统调用，加载用户程序到内存并开始执行进程
 
+---
 
 ### 12.4 进程等待与退出
 
