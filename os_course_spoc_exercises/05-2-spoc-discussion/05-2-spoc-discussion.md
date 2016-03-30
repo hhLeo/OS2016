@@ -35,7 +35,9 @@ run_link、list_link、hash_link
 		idleproc->need_resched = 1;
 		set_proc_name(idleproc, "idle");
 		nr_process ++;
-initproc的创建也是在proc.c里：
+```
+`initproc`的创建也是在`proc.c`里：
+```
 		int pid = kernel_thread(init_main, "Hello world!!", 0);
 		if (pid <= 0) {
 			panic("create init_main failed.\n");
@@ -64,23 +66,23 @@ initproc的创建也是在proc.c里：
 2.在`proc.c`中，`proc_init`创建了两个内核进程：`idleproc`和`initproc`
 
 ```
-idleproc = alloc_proc()
-...
-int pid = kernel_thread(init_main, NULL, 0);
-...
-initproc = find_proc(pid);
+	idleproc = alloc_proc()
+	...
+	int pid = kernel_thread(init_main, NULL, 0);
+	...
+	initproc = find_proc(pid);
 ```
 
 3.在`proc.c`中，`init_main`创建了`user_main`内核进程
 
 ```
-int pid = kernel_thread(user_main, NULL, 0);
+	int pid = kernel_thread(user_main, NULL, 0);
 ```
 
 4.`user_main`是用于执行一个用户程序的内核进程
 
 ```
-KERNEL_EXECVE(sh);
+	KERNEL_EXECVE(sh);
 ```
 
 5.`kernel_execve`：执行`SYS_exec`系统调用，加载用户程序到内存并开始执行进程
