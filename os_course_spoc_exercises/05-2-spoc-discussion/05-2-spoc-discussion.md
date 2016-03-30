@@ -45,13 +45,40 @@ initproc的创建也是在proc.c里：
 proc_init()函数中先创建了第一个进程idleproc，并设置该进程的相关状态信息，然后创建了第二个进程，该进程加载的代码是init_main()，
 然后让initproc指向第二个进程，也就得到了initproc的进程标识pid。输出即可。
 ```
-5. 请在ucore启动时显示空闲线程（idleproc）和初始进程(initproc)的进程控制块中的“pde_t *pgdir”的内容。它们是否一致？为什么？
+5.请在ucore启动时显示空闲线程（idleproc）和初始进程(initproc)的进程控制块中的“pde_t *pgdir”的内容。它们是否一致？为什么？
 
 ### 12.3 进程加载
 
 1. 加载进程后，新进程进入就绪状态，它开始执行时的第一条指令的位置，在elf中保存在什么地方？在加载后，保存在什么地方？
 2. 第一个用户进程执行的代码在哪里？它是什么时候加载到内存中的？
 
+答：第一个用户进程执行的代码在user文件夹中，lab8中默认为sh.c文件；加载用户代码的进程代码在/kern/process/proc.c:user_main中，具体过程如下：
+
+1.在`init.c`中调用了`proc_init()`
+
+2.在`proc.c`中，`proc_init`创建了两个内核进程：`idleproc`和`initproc`
+
+```
+idleproc = alloc_proc()
+...
+int pid = kernel_thread(init_main, NULL, 0);
+...
+initproc = find_proc(pid);
+```
+
+3.在`proc.c`中，`init_main`创建了`user_main`内核进程
+
+```
+int pid = kernel_thread(user_main, NULL, 0);
+```
+
+4.`user_main`是用于执行一个用户程序的内核进程
+
+```
+KERNEL_EXECVE(sh);
+```
+
+5.`kernel_execve`：执行`SYS_exec`系统调用，加载用户程序到内存并开始执行进程
 
 
 ### 12.4 进程等待与退出
